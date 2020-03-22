@@ -13,4 +13,10 @@
     <string name="m_Vtext">Hello</string>
     <string name="m_btn">转换</string>
     <string name="edit_hint">请输入摄氏度</string>
+    <string name="teamName">LGD</string>
+    <string name="originScore">0</string>
+    <string name="add3">+3</string>
+    <string name="add2">+2</string>
+    <string name="add1">+1</string>
+    <string name="resetBtn">reset</string>
 </resources>
