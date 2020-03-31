@@ -37,4 +37,7 @@
     <string name="exc_btn7">加元</string>
     <string name="exc_btn8">港元</string>
     <string name="start_another">切换工具</string>
+    <string name="config_btn">设置汇率</string>
+    <string name="save_btn">保存</string>
+    <string name="menu_item">设置</string>
 </resources>
