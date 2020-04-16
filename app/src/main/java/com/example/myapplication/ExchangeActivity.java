@@ -1,7 +1,9 @@
 package com.example.myapplication;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -31,6 +33,17 @@ public class ExchangeActivity extends AppCompatActivity {
 
         rmb=(TextView) findViewById(R.id.editText3);
         exchanged=(TextView) findViewById(R.id.textView3);
+
+        SharedPreferences sp= PreferenceManager.getDefaultSharedPreferences(this);
+        usa=sp.getFloat("usa_rate",0.0f);
+        eur=sp.getFloat("eur_rate",0.0f);
+        eng=sp.getFloat("eng_rate",0.0f);
+        jan=sp.getFloat("jan_rate",0.0f);
+        fra=sp.getFloat("fra_rate",0.0f);
+        aus=sp.getFloat("aus_rate",0.0f);
+        can=sp.getFloat("can_rate",0.0f);
+        hon=sp.getFloat("hon_rate",0.0f);
+
     }
 
 
@@ -100,6 +113,21 @@ public class ExchangeActivity extends AppCompatActivity {
             can=data.getFloatExtra("new_can",0.0f);
             hon=data.getFloatExtra("new_hon",0.0f);
             Log.i("exc2","收到config数据："+usa);
+
+            SharedPreferences sp=PreferenceManager.getDefaultSharedPreferences(this);
+            SharedPreferences.Editor myEdt= sp.edit();
+
+            myEdt.putFloat("usa_rate", usa);
+            myEdt.putFloat("eur_rate", eur);
+            myEdt.putFloat("eng_rate", eng);
+            myEdt.putFloat("jan_rate", jan);
+            myEdt.putFloat("fra_rate", fra);
+            myEdt.putFloat("can_rate", can);
+            myEdt.putFloat("hon_rate", hon);
+            myEdt.commit();
+
+            Log.i("rate","汇率保存至本地文件");
+
         }
         super.onActivityResult(requestCode,resultCode,data);
     }
