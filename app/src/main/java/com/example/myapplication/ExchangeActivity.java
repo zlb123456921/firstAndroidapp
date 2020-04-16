@@ -3,6 +3,8 @@ package com.example.myapplication;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Menu;
@@ -15,7 +17,15 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-public class ExchangeActivity extends AppCompatActivity {
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+
+public class ExchangeActivity extends AppCompatActivity implements Runnable{
     TextView rmb;
     TextView exchanged;
     private float usa=0.1413f;
@@ -26,6 +36,8 @@ public class ExchangeActivity extends AppCompatActivity {
     private float aus=0.2315f;
     private float can=0.1978f;
     private float hon=1.0954f;
+
+    Handler my_handler;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,6 +55,20 @@ public class ExchangeActivity extends AppCompatActivity {
         aus=sp.getFloat("aus_rate",0.0f);
         can=sp.getFloat("can_rate",0.0f);
         hon=sp.getFloat("hon_rate",0.0f);
+
+        Thread my_Thread=new Thread(this);
+        my_Thread.start();
+        my_handler=new Handler(){
+            @Override
+            public  void handleMessage(Message msg){
+                super.handleMessage(msg);
+                if(msg.what==5){
+                    String str=(String)msg.obj;
+                    Log.i("thread",str);
+                }
+            }
+
+        };
 
     }
 
@@ -136,4 +162,52 @@ public class ExchangeActivity extends AppCompatActivity {
           Intent count = new Intent(this,CountScoreActivity.class);
           startActivity(count);
      }
+
+    @Override
+    public void run() {
+     Log.i("thread","线程启动器");
+
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        //获取Msg对象并返回主线程
+
+        Message msg=my_handler.obtainMessage(5);
+//       msg.what=5;
+        msg.obj="hello from run";
+        my_handler.sendMessage(msg);
+
+        //获取网页数据
+        URL myUrl= null;
+        try {
+            myUrl = new URL("http://www.usd-cny.com/icbc.htm");//http://www.usd-cny.com/icbc.htm
+            HttpURLConnection mhttp= (HttpURLConnection) myUrl.openConnection();
+            InputStream in=mhttp.getInputStream();
+            String html=InputStream2String(in);
+            Log.i("TAG",html);
+        }
+        catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public String InputStream2String(InputStream inStream) throws IOException {
+        final int bufferSize = 1024;
+        final char[] buffer = new char[bufferSize];
+        final StringBuilder out = new StringBuilder();
+        Reader in = new InputStreamReader(inStream, "gb2312");
+        for (; ; ) {
+            int rsz = in.read(buffer, 0, buffer.length);
+            if (rsz < 0)
+                break;
+            out.append(buffer, 0, rsz);
+        }
+        return out.toString();
+    }
 }
