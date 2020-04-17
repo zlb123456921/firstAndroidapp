@@ -4,36 +4,34 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:clickable="true"
     tools:context=".CountScoreActivity">
 
     <Button
-        android:id="@+id/button2"
-        android:layout_width="135dp"
+        android:id="@+id/button14"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentLeft="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginStart="111dp"
-        android:layout_marginLeft="111dp"
-        android:layout_marginTop="62dp"
-        android:layout_marginEnd="112dp"
-        android:layout_marginRight="112dp"
-        android:layout_marginBottom="43dp"
-        android:background="@color/colorAccent"
+        android:layout_marginEnd="167dp"
+        android:layout_marginRight="167dp"
+        android:layout_marginBottom="117dp"
         android:onClick="btnReset"
         android:text="@string/resetBtn"
-        android:visibility="visible" />
+        android:visibility="visible"
+        tools:visibility="visible" />
 
     <LinearLayout
+        android:id="@+id/mainup"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
         <LinearLayout
-            android:layout_width="173dp"
+            android:layout_width="0dp"
             android:layout_height="413dp"
+            android:layout_weight="1"
             android:orientation="vertical">
 
             <TextView
@@ -57,8 +55,9 @@
             <Button
                 android:id="@+id/score1"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
                 android:layout_marginTop="16dp"
+                android:layout_weight="1"
                 android:onClick="btnAdd3"
                 android:text="@string/add3"
                 android:textSize="30sp" />
@@ -66,8 +65,9 @@
             <Button
                 android:id="@+id/score2"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
                 android:layout_marginTop="16dp"
+                android:layout_weight="1"
                 android:onClick="btnAdd2"
                 android:text="@string/add2"
                 android:textSize="30sp" />
@@ -75,8 +75,9 @@
             <Button
                 android:id="@+id/score3"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
                 android:layout_marginTop="16dp"
+                android:layout_weight="1"
                 android:onClick="btnAdd1"
                 android:text="@string/add1"
                 android:textSize="30sp" />
@@ -84,8 +85,9 @@
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
+            android:layout_weight="1"
             android:orientation="vertical">
 
             <TextView
@@ -109,8 +111,9 @@
             <Button
                 android:id="@+id/T2score1"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
                 android:layout_marginTop="16dp"
+                android:layout_weight="1"
                 android:onClick="btn2Add3"
                 android:text="@string/add3"
                 android:textSize="30sp" />
@@ -118,8 +121,9 @@
             <Button
                 android:id="@+id/T2score2"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
                 android:layout_marginTop="16dp"
+                android:layout_weight="1"
                 android:onClick="btn2Add2"
                 android:text="@string/add2"
                 android:textSize="30sp" />
@@ -127,8 +131,9 @@
             <Button
                 android:id="@+id/T2score3"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
                 android:layout_marginTop="16dp"
+                android:layout_weight="1"
                 android:onClick="btn2Add1"
                 android:text="@string/add1"
                 android:textSize="30sp" />

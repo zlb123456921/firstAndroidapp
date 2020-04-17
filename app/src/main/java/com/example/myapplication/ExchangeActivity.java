@@ -214,13 +214,8 @@ public class ExchangeActivity extends AppCompatActivity implements Runnable{
 
             //获取table元素
             Elements tables=doc.getElementsByTag("table");
-         /*   int i=0;
-            for(Element table:tables){
-                Log.i("table","run:table["+i+"]="+table);
-                i++;
-            }*/
             Element table0=tables.get(0);
-//            Elements bzs=doc.select(".bz");
+            //获取td元素
             Elements ths=table0.getElementsByTag("td");
             for (int i=0;i<ths.size();i+=6){
                 Element tdbz=ths.get(i);
@@ -235,7 +230,6 @@ public class ExchangeActivity extends AppCompatActivity implements Runnable{
                 else if("澳元".equals(bz)) mbd.putFloat("aus-rate",rate);
                 else if("加元".equals(bz)) mbd.putFloat("can-rate",rate);
                 else if("港币".equals(bz)) mbd.putFloat("hon-rate",rate);
-                Log.i("tds","jsoup:td=="+bz+"=="+rate);
             }
             Message msg=my_handler.obtainMessage(5);
             msg.obj=mbd;

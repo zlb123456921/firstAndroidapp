@@ -1,10 +1,11 @@
 package com.example.myapplication;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 
 public class CountScoreActivity extends AppCompatActivity {
 
@@ -18,6 +19,28 @@ public class CountScoreActivity extends AppCompatActivity {
         score=(TextView) findViewById(R.id.score);
         score2=(TextView) findViewById(R.id.T2score);
     }
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        String scorea=((TextView) findViewById(R.id.score)).getText().toString();
+        String scoreb=((TextView) findViewById(R.id.T2score)).getText().toString();
+
+        outState.putString("teama_score",scorea);
+        outState.putString("teamb_score",scoreb);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        String a=savedInstanceState.getString("teama_score");
+        String b=savedInstanceState.getString("teamb_score");
+
+        ((TextView) findViewById(R.id.score)).setText(a);
+        ((TextView) findViewById(R.id.T2score)).setText(b);
+    }
+
     public  void btnAdd3(View btn){
         showScore(3);
     }
