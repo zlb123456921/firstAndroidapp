@@ -17,13 +17,15 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
 
 public class ExchangeActivity extends AppCompatActivity implements Runnable{
     TextView rmb;
@@ -63,8 +65,15 @@ public class ExchangeActivity extends AppCompatActivity implements Runnable{
             public  void handleMessage(Message msg){
                 super.handleMessage(msg);
                 if(msg.what==5){
-                    String str=(String)msg.obj;
-                    Log.i("thread",str);
+                    Bundle recv=(Bundle) msg.obj;
+                    usa=recv.getFloat("usa-rate");
+                    eur=recv.getFloat("eur-rate");
+                    eng=recv.getFloat("eng-rate");
+                    jan=recv.getFloat("jan-rate");
+                    fra=recv.getFloat("fra-rate");
+                    aus=recv.getFloat("aus-rate");
+                    can=recv.getFloat("can-rate");
+                    hon=recv.getFloat("hon-rate");
                 }
             }
 
@@ -175,24 +184,65 @@ public class ExchangeActivity extends AppCompatActivity implements Runnable{
 
         //获取Msg对象并返回主线程
 
-        Message msg=my_handler.obtainMessage(5);
-//       msg.what=5;
+       /* Message msg=my_handler.obtainMessage(5);
         msg.obj="hello from run";
-        my_handler.sendMessage(msg);
-
+        my_handler.sendMessage(msg);*/
+        Bundle mbd=new Bundle();
         //获取网页数据
-        URL myUrl= null;
+        //方法一
+//        URL myUrl= null;
+//        try {
+//            myUrl = new URL("http://www.usd-cny.com/icbc.htm");//http://www.usd-cny.com/icbc.htm
+//            HttpURLConnection mhttp= (HttpURLConnection) myUrl.openConnection();
+//            InputStream in=mhttp.getInputStream();
+//            String html=InputStream2String(in);
+//            Log.i("TAG",html);
+//            Document doc = null;
+//            doc=Jsoup.parse(html);
+//        }
+//        catch (MalformedURLException e) {
+//            e.printStackTrace();
+//        }
+//        catch (IOException e) {
+//            e.printStackTrace();
+//        }
+        //方法二
+        Document doc = null;
         try {
-            myUrl = new URL("http://www.usd-cny.com/icbc.htm");//http://www.usd-cny.com/icbc.htm
-            HttpURLConnection mhttp= (HttpURLConnection) myUrl.openConnection();
-            InputStream in=mhttp.getInputStream();
-            String html=InputStream2String(in);
-            Log.i("TAG",html);
-        }
-        catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
-        catch (IOException e) {
+            doc = Jsoup.connect("http://www.usd-cny.com/bankofchina.htm").get();
+            Log.i("jsoup",doc.title());
+
+            //获取table元素
+            Elements tables=doc.getElementsByTag("table");
+         /*   int i=0;
+            for(Element table:tables){
+                Log.i("table","run:table["+i+"]="+table);
+                i++;
+            }*/
+            Element table0=tables.get(0);
+//            Elements bzs=doc.select(".bz");
+            Elements ths=table0.getElementsByTag("td");
+            for (int i=0;i<ths.size();i+=6){
+                Element tdbz=ths.get(i);
+                Element tdrate=ths.get(i+5);
+                String bz=tdbz.text();
+                Float rate=100f/Float.parseFloat(tdrate.text());
+                if("美元".equals(bz)) mbd.putFloat("usa-rate",rate);
+                else if("欧元".equals(bz)) mbd.putFloat("eur-rate",rate);
+                else if("英镑".equals(bz)) mbd.putFloat("eng-rate",rate);
+                else if("日元".equals(bz)) mbd.putFloat("jan-rate",rate);
+                else if("瑞士法郎".equals(bz)) mbd.putFloat("fra-rate",rate);
+                else if("澳元".equals(bz)) mbd.putFloat("aus-rate",rate);
+                else if("加元".equals(bz)) mbd.putFloat("can-rate",rate);
+                else if("港币".equals(bz)) mbd.putFloat("hon-rate",rate);
+                Log.i("tds","jsoup:td=="+bz+"=="+rate);
+            }
+            Message msg=my_handler.obtainMessage(5);
+            msg.obj=mbd;
+            my_handler.sendMessage(msg);
+
+
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
