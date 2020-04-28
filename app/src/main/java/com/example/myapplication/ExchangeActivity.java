@@ -1,11 +1,11 @@
 package com.example.myapplication;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -26,18 +26,22 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
 public class ExchangeActivity extends AppCompatActivity implements Runnable{
     TextView rmb;
     TextView exchanged;
-    private float usa=0.1413f;
-    private float eur=0.1277f;
-    private float eng=0.1153f;
-    private float jan=15.3098f;
-    private float fra=0.1356f;
-    private float aus=0.2315f;
-    private float can=0.1978f;
-    private float hon=1.0954f;
+    private float usa=0;
+    private float eur=0;
+    private float eng=0;
+    private float jan=0;
+    private float fra=0;
+    private float aus=0;
+    private float can=0;
+    private float hon=0;
+    private String updateDate="";
 
     Handler my_handler;
     @Override
@@ -48,7 +52,7 @@ public class ExchangeActivity extends AppCompatActivity implements Runnable{
         rmb=(TextView) findViewById(R.id.editText3);
         exchanged=(TextView) findViewById(R.id.textView3);
 
-        SharedPreferences sp= PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences sp=getSharedPreferences("myrate", Activity.MODE_PRIVATE);
         usa=sp.getFloat("usa_rate",0.0f);
         eur=sp.getFloat("eur_rate",0.0f);
         eng=sp.getFloat("eng_rate",0.0f);
@@ -57,9 +61,24 @@ public class ExchangeActivity extends AppCompatActivity implements Runnable{
         aus=sp.getFloat("aus_rate",0.0f);
         can=sp.getFloat("can_rate",0.0f);
         hon=sp.getFloat("hon_rate",0.0f);
+        updateDate=sp.getString("update_date","");
 
-        Thread my_Thread=new Thread(this);
-        my_Thread.start();
+        //
+        Date today = Calendar.getInstance().getTime();
+        SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
+        final String todayStr=sdf.format(today);
+
+
+        if(!todayStr.equals(updateDate)){
+            Thread my_Thread=new Thread(this);
+            my_Thread.start();
+            Log.i("date","启动更新数据"+todayStr);
+        }else {
+            Log.i("date","不需要更新");
+        }
+
+
+
         my_handler=new Handler(){
             @Override
             public  void handleMessage(Message msg){
@@ -74,6 +93,13 @@ public class ExchangeActivity extends AppCompatActivity implements Runnable{
                     aus=recv.getFloat("aus-rate");
                     can=recv.getFloat("can-rate");
                     hon=recv.getFloat("hon-rate");
+
+                    SharedPreferences sp=getSharedPreferences("myrate", Activity.MODE_PRIVATE);
+//                    SharedPreferences sp=PreferenceManager.getDefaultSharedPreferences(this);
+                    SharedPreferences.Editor myEdt= sp.edit();
+                    myEdt.putString("update_date",todayStr);
+                    myEdt.commit();
+
                 }
             }
 
@@ -118,6 +144,19 @@ public class ExchangeActivity extends AppCompatActivity implements Runnable{
         if(item.getItemId()==R.id.Menu_set){
             openConfig();
         }
+        else if(item.getItemId()==R.id.open_list){
+            Intent config = new Intent(this, RateListActivity.class);
+            config.putExtra("usa_rate", usa);
+            config.putExtra("eur_rate", eur);
+            config.putExtra("eng_rate", eng);
+            config.putExtra("jan_rate", jan);
+            config.putExtra("fra_rate", fra);
+            config.putExtra("aus_rate", aus);
+            config.putExtra("can_rate", can);
+            config.putExtra("hon_rate", hon);
+            startActivity(config);
+  //          startActivityForResult(config, 1);
+        }
         return super.onOptionsItemSelected(item);
     }
 
@@ -149,7 +188,10 @@ public class ExchangeActivity extends AppCompatActivity implements Runnable{
             hon=data.getFloatExtra("new_hon",0.0f);
             Log.i("exc2","收到config数据："+usa);
 
-            SharedPreferences sp=PreferenceManager.getDefaultSharedPreferences(this);
+
+
+            SharedPreferences sp=getSharedPreferences("myrate", Activity.MODE_PRIVATE);
+           // SharedPreferences sp=PreferenceManager.getDefaultSharedPreferences(this);
             SharedPreferences.Editor myEdt= sp.edit();
 
             myEdt.putFloat("usa_rate", usa);
@@ -207,6 +249,14 @@ public class ExchangeActivity extends AppCompatActivity implements Runnable{
 //            e.printStackTrace();
 //        }
         //方法二
+        getFromeBOC(mbd);
+
+        Message msg=my_handler.obtainMessage(5);
+        msg.obj=mbd;
+        my_handler.sendMessage(msg);
+    }
+
+    private void getFromeBOC(Bundle mbd) {
         Document doc = null;
         try {
             doc = Jsoup.connect("http://www.usd-cny.com/bankofchina.htm").get();
@@ -231,11 +281,6 @@ public class ExchangeActivity extends AppCompatActivity implements Runnable{
                 else if("加元".equals(bz)) mbd.putFloat("can-rate",rate);
                 else if("港币".equals(bz)) mbd.putFloat("hon-rate",rate);
             }
-            Message msg=my_handler.obtainMessage(5);
-            msg.obj=mbd;
-            my_handler.sendMessage(msg);
-
-
         } catch (IOException e) {
             e.printStackTrace();
         }
