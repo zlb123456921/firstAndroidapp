@@ -35,7 +35,7 @@ public class RateListActivity extends ListActivity implements Runnable{
             @Override
             public void handleMessage(Message msg){
                 if(msg.what==7){
-                    List <String>recv=(List<String>) msg.obj;
+                    List <String> recv=(List<String>) msg.obj;
                     ListAdapter adapter=new ArrayAdapter<String>(RateListActivity.this,android.R.layout.simple_list_item_1,recv);
                     setListAdapter(adapter);
 
@@ -72,8 +72,10 @@ public class RateListActivity extends ListActivity implements Runnable{
             for (int i=0;i<ths.size();i+=6){
                 Element tdbz=ths.get(i);
                 Element tdrate=ths.get(i+5);
+
                 String bz=tdbz.text();
                 Float rate=100f/Float.parseFloat(tdrate.text());
+
               rate_list.add(bz+"==>"+rate);
             }
         } catch (IOException e) {

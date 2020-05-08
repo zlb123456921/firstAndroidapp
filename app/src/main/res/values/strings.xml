@@ -41,4 +41,5 @@
     <string name="save_btn">保存</string>
     <string name="menu_item">设置</string>
     <string name="lable_open_list">打开列表</string>
+    <string name="SingleExcTitle">汇率转换</string>
 </resources>

@@ -156,6 +156,9 @@ public class ExchangeActivity extends AppCompatActivity implements Runnable{
             config.putExtra("hon_rate", hon);
             startActivity(config);
   //          startActivityForResult(config, 1);
+        }else if (item.getItemId()==R.id.open_list2){
+            Intent config2=new Intent(this,Ratelist2Activity.class);
+            startActivity(config2);
         }
         return super.onOptionsItemSelected(item);
     }

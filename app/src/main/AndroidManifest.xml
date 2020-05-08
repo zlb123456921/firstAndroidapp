@@ -15,11 +15,11 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".RateListActivity"></activity>
-        <activity android:name=".ConfigActivity" /> <!-- <intent-filter> -->
-        <!-- <action android:name="android.intent.action.MAIN" /> -->
-        <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
-        <!-- </intent-filter> -->
+
+        <activity android:name=".SingleExchangeActivity" />
+        <activity android:name=".Ratelist2Activity" />
+        <activity android:name=".RateListActivity" />
+        <activity android:name=".ConfigActivity" />
         <activity android:name=".ExchangeActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
