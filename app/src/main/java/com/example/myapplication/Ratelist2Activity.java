@@ -64,10 +64,8 @@ public class Ratelist2Activity extends ListActivity implements Runnable{
                 singleRate.putExtra("title",title);
                 singleRate.putExtra("rate",Float.parseFloat(detail));
                 startActivity(singleRate);
-
             }
         }
-
         );
 
     }

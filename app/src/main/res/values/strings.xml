@@ -42,4 +42,7 @@
     <string name="menu_item">设置</string>
     <string name="lable_open_list">打开列表</string>
     <string name="SingleExcTitle">汇率转换</string>
+    <string name="SearchApp_name">西南财经大学通知查询器</string>
+    <string name="Search_hint">请输入要搜索的内容</string>
+    <string name="Search_Btn">查询</string>
 </resources>
