@@ -87,7 +87,7 @@ public class Main2Activity extends AppCompatActivity implements Runnable  {
         if((ts-os)>604800017){
             Thread my_Thread=new Thread(this);
             my_Thread.start();
-            Log.i("date","启动更新数据"+ts+"/t"+os);
+            Log.i("date","启动更新数据"+ts+"\t"+os);
         }else{
             Log.i("date","无需启动更新数据");
         }
@@ -131,6 +131,7 @@ public class Main2Activity extends AppCompatActivity implements Runnable  {
         List<String> listKey=new ArrayList<>();
         result.remove("update_date");
         for (String key : result.keySet()) {
+            Log.i("SharedPreferences==>",key+"==="+result.get(key));
             if(key.indexOf(searchInput)>=0){
                 selected.put(key,result.get(key));
                 listKey.add(key);
@@ -154,27 +155,37 @@ public class Main2Activity extends AppCompatActivity implements Runnable  {
         HashMap<String,String> map =new HashMap<>();
         Document doc = null;
         String url="https://www.swufe.edu.cn";
+        String startURL="https://www.swufe.edu.cn/index/tzgg.htm";
+
         try {
-            doc = Jsoup.connect("https://www.swufe.edu.cn/index/tzgg.htm").timeout(50000000).maxBodySize(0).get();
-            //通过延迟50000000毫秒,设置响应body不限制
-           // Log.i("jsoup", String.valueOf(doc));
-            //获取table元素
-//            Elements tables=doc.getElementsByClass("whitenewslist clearfix");
-            Elements ul=doc.select("ul.whitenewslist.clearfix");
-            Elements li=(ul.get(0)).select("li");
+            boolean hasNext=false;
 
-            for (Element i:li){
-                Element a=i.select("a").first();
-                String linkHref = a.attr("href");
-                String title =a.attr("title");
-                linkHref=url+linkHref.substring(2);
+            do {
+                doc = Jsoup.connect(startURL).timeout(50000000).maxBodySize(0).get();
+                //通过延迟50000000毫秒,设置响应body不限制
 
-                map.put(title,linkHref);
-               // Log.i("jsoup", String.valueOf(a));
-//                Log.i("jsoup", linkHref);
-//                Log.i("jsoup", title);
-            }
+                Elements ul = doc.select("ul.whitenewslist.clearfix");
+                Elements li = (ul.get(0)).select("li");
 
+                for (Element i : li) {
+                    Element a = i.select("a").first();
+                    String linkHref = a.attr("href");
+                    String title = a.attr("title");
+                    linkHref = url + linkHref.substring(2);
+                    map.put(title, linkHref);
+                }
+
+                Elements next=doc.select("a:contains(下页)");
+                hasNext=!next.isEmpty();
+                if(hasNext) {
+                    String index=next.get(0).attr("href");
+                    startURL=startURL.substring(0,startURL.lastIndexOf('/')+1)+index;
+                    Log.i("jsoup", startURL);
+                } else {
+                    Log.i("jsoup===>","not found");
+                    break;
+                }
+            }while (hasNext);
 
         } catch (IOException e) {
             e.printStackTrace();
