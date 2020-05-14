@@ -19,17 +19,27 @@
 
         <activity android:name=".Main2Activity">
             <intent-filter>
-            <action android:name="android.intent.action.MAIN" />
-            <category android:name="android.intent.category.LAUNCHER" />
-        </intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
 
-        <activity android:name=".SingleExchangeActivity" />
-        <activity android:name=".Ratelist2Activity" />
+        <activity android:name=".SingleExchangeActivity"
+            android:theme="@style/Theme.MaterialComponents.Light.Dialog"/>
+        <activity android:name=".Ratelist2Activity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
         <activity android:name=".RateListActivity" />
         <activity android:name=".ConfigActivity" />
         <activity android:name=".ExchangeActivity">
-
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity android:name=".CountScoreActivity" />
         <activity android:name=".MainActivity" />

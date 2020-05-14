@@ -1,7 +1,9 @@
 
 package com.example.myapplication;
 
+import android.app.AlertDialog;
 import android.app.ListActivity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -42,8 +44,9 @@ public class Ratelist2Activity extends ListActivity implements Runnable{
             @Override
             public void handleMessage(Message msg){
                 if(msg.what==8){
-                    List<HashMap<String,String>> recv= (List<HashMap<String, String>>) msg.obj;
-                    listItemAdapter=new SimpleAdapter(Ratelist2Activity.this,recv,
+                   // List<HashMap<String,String>> recv= (List<HashMap<String, String>>) msg.obj;
+                    listItem= (ArrayList<HashMap<String, String>>) msg.obj;
+                    listItemAdapter=new SimpleAdapter(Ratelist2Activity.this,listItem,
                             R.layout.activity_ratelist2,
                             new String[]{"ItemTitle","ItemDetail"},
                             new int[]{R.id.itemTitle,R.id.itemDetail});
@@ -53,6 +56,7 @@ public class Ratelist2Activity extends ListActivity implements Runnable{
             }
         };
 
+        //列表点击事件
         getListView().setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -67,6 +71,26 @@ public class Ratelist2Activity extends ListActivity implements Runnable{
             }
         }
         );
+        //列表长按事件
+        getListView().setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
+                Log.i("RateList2","长按事件触发");
+                /*listItem.remove(position);
+                listItemAdapter.notifyDataSetChanged();*/
+
+                AlertDialog.Builder build=new AlertDialog.Builder(Ratelist2Activity.this);
+                build.setTitle("提示").setMessage("是否删除当前币种？").setPositiveButton("是", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                          listItem.remove(position);
+                          listItemAdapter.notifyDataSetChanged();
+                    }
+                }).setNegativeButton("否",null);
+                build.show();
+                return true;
+            }
+        });
 
     }
     private void initListView(){
